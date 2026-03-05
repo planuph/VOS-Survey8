@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>แบบสำรวจ VOS — กลุ่มที่ 8 | โรงพยาบาลมหาวิทยาลัยพะเยา</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --primary: #006D77; --primary-dark: #004D56; --primary-light: #83C5BE;
+  --accent: #E29578; --bg: #F4F9F9; --card: #FFFFFF;
+  --text: #1A2E35; --text-muted: #5A7A82; --border: #D0E8EB;
+  --success: #2A9D8F; --danger: #E76F51;
+  --shadow: 0 4px 24px rgba(0,109,119,0.10);
+  --radius: 16px; --radius-sm: 8px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Sarabun', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; font-size: 15px; line-height: 1.6; }
+
+.topbar {
+  background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 60%, #008891 100%);
+  color: white; padding: 0 28px; display: flex; align-items: center;
+  gap: 16px; height: 64px; position: sticky; top: 0; z-index: 100;
+  box-shadow: 0 2px 20px rgba(0,0,0,0.2);
+}
+.topbar-logo { font-size: 20px; font-weight: 700; }
+.topbar-logo span { color: var(--primary-light); }
+.topbar-sub { font-size: 12px; opacity: 0.75; }
+.main { max-width: 900px; margin: 0 auto; padding: 32px 20px; }
+
+/* Name card */
+.name-card {
+  background: white; border-radius: var(--radius); border: 1.5px solid var(--border);
+  box-shadow: var(--shadow); padding: 20px 24px; margin-bottom: 24px;
+  display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+}
+.name-card label { font-size: 14px; font-weight: 600; white-space: nowrap; }
+.name-card input {
+  flex: 1; min-width: 200px; padding: 10px 14px;
+  border: 1.5px solid var(--border); border-radius: var(--radius-sm);
+  font-family: inherit; font-size: 14px; outline: none; transition: border-color 0.2s;
+}
+.name-card input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(0,109,119,0.1); }
+
+/* Form */
+.section-header {
+  background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+  color: white; border-radius: var(--radius) var(--radius) 0 0;
+  padding: 20px 24px; display: flex; align-items: center; gap: 12px;
+}
+.section-header .s-icon { font-size: 28px; }
+.section-header h2 { font-size: 18px; font-weight: 700; }
+.section-header p { font-size: 13px; opacity: 0.8; margin-top: 2px; }
+.s-badge {
+  margin-left: auto; background: rgba(255,255,255,0.2);
+  border-radius: 12px; padding: 4px 12px; font-size: 12px; font-weight: 600;
+}
+.profile-fields {
+  background: white; border: 1.5px solid var(--border); padding: 20px 24px; border-top: none;
+}
+.profile-fields h4 { font-size: 14px; font-weight: 700; margin-bottom: 14px; color: var(--primary-dark); }
+.profile-fields-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px,1fr)); gap: 16px; }
+.form-group label { display: block; font-weight: 600; font-size: 13px; margin-bottom: 5px; }
+.form-group input, .form-group select, .form-group textarea {
+  width: 100%; padding: 9px 12px; border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm); font-family: inherit; font-size: 13px;
+  background: white; outline: none; transition: border-color 0.2s;
+}
+.form-group input:focus, .form-group textarea:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(0,109,119,0.1); }
+.radio-group { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 4px; }
+.radio-item { display: flex; align-items: center; gap: 6px; font-size: 13px; cursor: pointer; }
+.section-block {
+  background: white; border: 1.5px solid var(--border); border-top: none; padding: 20px 24px;
+}
+.section-block h3 { font-size: 15px; font-weight: 700; color: var(--primary-dark); margin-bottom: 14px; }
+.likert-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.likert-table th {
+  background: var(--primary-dark); color: white;
+  padding: 8px 10px; text-align: center; font-weight: 600;
+}
+.likert-table th:first-child { text-align: left; min-width: 200px; }
+.likert-table td { padding: 10px; border-bottom: 1px solid var(--border); text-align: center; vertical-align: middle; }
+.likert-table td:first-child { text-align: left; }
+.likert-table tr:hover td { background: rgba(0,109,119,0.03); }
+.likert-radio { width: 18px; height: 18px; cursor: pointer; accent-color: var(--primary); }
+.q-num { font-weight: 600; color: var(--primary); margin-right: 6px; }
+.openended-section { display: flex; flex-direction: column; gap: 14px; }
+.oe-label { font-size: 13px; font-weight: 600; margin-bottom: 6px; }
+.oe-textarea {
+  width: 100%; padding: 10px 12px; border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm); font-family: inherit; font-size: 13px;
+  resize: vertical; outline: none; transition: border-color 0.2s;
+}
+.oe-textarea:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(0,109,119,0.1); }
+.form-actions {
+  background: white; border: 1.5px solid var(--border); border-top: none;
+  border-radius: 0 0 var(--radius) var(--radius);
+  padding: 20px 24px; display: flex; justify-content: flex-end;
+}
+.btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 12px 28px; border-radius: 10px; border: none; cursor: pointer;
+  font-family: inherit; font-size: 15px; font-weight: 600; transition: all 0.2s;
+}
+.btn-primary { background: var(--primary); color: white; }
+.btn-primary:hover { background: var(--primary-dark); box-shadow: 0 4px 12px rgba(0,109,119,0.3); }
+
+/* Success */
+#success-screen {
+  display: none; text-align: center; padding: 60px 20px; max-width: 500px; margin: 40px auto;
+}
+.success-icon {
+  width: 90px; height: 90px;
+  background: linear-gradient(135deg, var(--success), var(--primary));
+  border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  font-size: 44px; margin: 0 auto 24px;
+  animation: popIn 0.5s cubic-bezier(0.34,1.56,0.64,1) both;
+}
+@keyframes popIn { from { transform: scale(0); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+#success-screen h2 { font-size: 24px; font-weight: 700; margin-bottom: 12px; }
+#success-screen p { font-size: 15px; color: var(--text-muted); margin-bottom: 8px; }
+.success-score {
+  display: inline-block;
+  background: linear-gradient(135deg, var(--success), var(--primary));
+  color: white; font-size: 22px; font-weight: 700;
+  padding: 8px 24px; border-radius: 24px; margin: 16px 0 28px;
+}
+.btn-success {
+  background: var(--primary); color: white; padding: 12px 28px;
+  border-radius: 10px; border: none; cursor: pointer; font-family: inherit;
+  font-size: 15px; font-weight: 600; transition: all 0.2s;
+}
+.btn-success:hover { background: var(--primary-dark); }
+
+/* Toast */
+.toast {
+  position: fixed; bottom: 24px; right: 24px; z-index: 9999;
+  background: #1A2E35; color: white; padding: 14px 20px; border-radius: 12px;
+  font-size: 14px; font-weight: 500; box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+  opacity: 0; transform: translateY(20px); transition: all 0.3s;
+}
+.toast.show { opacity: 1; transform: translateY(0); }
+.toast.success { border-left: 4px solid var(--success); }
+.toast.error   { border-left: 4px solid var(--danger); }
+
+@media (max-width: 600px) {
+  .topbar { padding: 0 16px; }
+  .main { padding: 20px 12px; }
+  .s-badge { display: none; }
+  .likert-table th, .likert-table td { padding: 6px 4px; font-size: 12px; }
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div>
+    <div class="topbar-logo">VOS <span>Survey</span></div>
+    <div class="topbar-sub">แบบสำรวจเสียงผู้มีส่วนได้ส่วนเสีย — โรงพยาบาลมหาวิทยาลัยพะเยา</div>
+  </div>
+</div>
+
+<div class="main">
+  <div id="success-screen">
+    <div class="success-icon">✅</div>
+    <h2>ส่งแบบประเมินสำเร็จแล้ว!</h2>
+    <p>ขอบคุณที่ร่วมแสดงความคิดเห็นเพื่อพัฒนาคุณภาพโรงพยาบาล</p>
+    <div class="success-score" id="score-display">คะแนน: — / 5</div>
+    <p style="font-size:13px;margin-bottom:24px;">หากต้องการกรอกใหม่กดปุ่มด้านล่าง</p>
+    <button class="btn-success" onclick="resetForm()">🔄 กรอกใหม่</button>
+  </div>
+
+  <div id="form-area">
+    <div class="name-card">
+      <label>👤 ชื่อผู้กรอก (ไม่บังคับ)</label>
+      <input type="text" id="respondent-name" placeholder="กรอกชื่อหรือเว้นว่างไว้ได้">
+    </div>
+    <div id="form-container"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzdwdMN6lLFaEydzEXxXcodMMC1QofbSpTOv3CPRRS43Fro1iZalPuMLGm_vJ1IeG_N1A/exec';
+const HOSPITAL   = 'โรงพยาบาลมหาวิทยาลัยพะเยา';
+const PERIOD     = '2569';
+const GROUP_ID   = 8;
+
+let formData = { profile: {}, likert: {}, openEnded: {} };
+
+const GROUPS = [
+  {
+    id: 1, icon: '📊', name: 'ผู้บริหาร', nameEn: 'Administrators & Management', type: 'internal',
+    target: 'ผู้อำนวยการ รองผู้อำนวยการ หัวหน้ากลุ่มงาน หัวหน้าฝ่าย คณะกรรมการบริหาร',
+    profileFields: [
+      { id: 'position', label: 'ตำแหน่ง', type: 'text', placeholder: 'ระบุตำแหน่ง' },
+      { id: 'department', label: 'ฝ่าย/กลุ่มงาน', type: 'text', placeholder: 'ระบุฝ่าย' },
+      { id: 'level', label: 'ระดับ', type: 'radio', options: ['Top','Middle','First-line'] }
+    ],
+    likertSections: [
+      {
+        id: '1.1', title: 'ความพร้อมองค์กรและการบริหารเชิงกลยุทธ์',
+        questions: [
+          'วิสัยทัศน์และยุทธศาสตร์องค์กรชัดเจน สื่อสารได้ทั่วถึงทุกระดับ',
+          'ระบบบริหารคุณภาพ (HA / TQA / EdPEx) มีความเข้มแข็ง',
+          'ระบบฐานข้อมูล / Business Intelligence รองรับการตัดสินใจได้จริง',
+          'กระบวนการจัดซื้อจัดจ้างมีประสิทธิภาพและโปร่งใส',
+          'ระบบบริหารความเสี่ยงและแผนรับมือวิกฤต (Risk Management) ครบถ้วน',
+          'นโยบาย Smart Hospital / Digital Transformation ก้าวหน้าตามเป้าหมาย',
+          'ระบบพัฒนาบุคลากร (IDP / Talent Management) ชัดเจนและปฏิบัติได้',
+          'ผลลัพธ์ทางการเงินและการบริหารต้นทุนบรรลุเป้าหมายที่กำหนด',
+          'ความร่วมมือกับภาคีเครือข่ายภายนอก (MOU / ชุมชน / ภาคเอกชน) มีคุณภาพ',
+          'ระบบสื่อสารและการมีส่วนร่วมของบุคลากรทุกระดับมีประสิทธิผล'
+        ]
+      }
+    ],
+    openEndedSections: [
+      { id: '1.2', title: 'ความต้องการเชิงกลยุทธ์และข้อเสนอแนะ', questions: [
+        'ประเด็นท้าทายเชิงกลยุทธ์ที่สำคัญที่สุดในปีงบประมาณนี้',
+        'ทรัพยากรหรือการสนับสนุนที่ต้องการจากระดับนโยบาย (กระทรวง / มหาวิทยาลัย)',
+        'โอกาสพัฒนาองค์กรที่ยังไม่ได้ดำเนินการ (Quick Wins / Long-term Initiatives)',
+        'ข้อเสนอแนะเพื่อยกระดับมาตรฐานคุณภาพโรงพยาบาล'
+      ]}
+    ]
+  },
+  {
+    id: 2, icon: '👨‍⚕️', name: 'แพทย์ / อาจารย์แพทย์', nameEn: 'Physicians & Academic Faculty', type: 'internal',
+    target: 'แพทย์ประจำ อาจารย์แพทย์ แพทย์เฉพาะทางทุกสาขา แพทย์ผู้ช่วย',
+    profileFields: [
+      { id: 'dept', label: 'สาขา/ภาควิชา', type: 'text', placeholder: 'ระบุสาขา' },
+      { id: 'role', label: 'บทบาท', type: 'radio', options: ['อาจารย์แพทย์','แพทย์ประจำ','ทั้งสองบทบาท'] },
+      { id: 'exp', label: 'ประสบการณ์', type: 'radio', options: ['<5ปี','5-15ปี','>15ปี'] }
+    ],
+    likertSections: [
+      { id: '2.1', title: 'สภาพแวดล้อมการทำงานและคุณภาพชีวิต', questions: [
+        'ภาระงานโดยรวม (งานสอน / บริการ / วิจัย) มีความสมดุล',
+        'ระบบการอยู่เวรมีความสมเหตุสมผล (เช่น 1 วัน เว้น 2 วัน)',
+        'มีสิ่งอำนวยความสะดวกในที่ทำงาน (ห้องพัก / อาหาร / Internet) เพียงพอ',
+        'รู้สึกปลอดภัยในสภาพแวดล้อมการทำงาน (SAFE Policy / Zero Tolerance)',
+        'ระบบ AI / ดิจิทัลช่วยลดภาระงานเอกสารและงานซ้ำซ้อนได้จริง',
+        'ค่าตอบแทน สวัสดิการ และแรงจูงใจมีความเหมาะสมกับภาระงาน',
+        'มีโอกาสพัฒนาทักษะวิชาชีพและวิชาการอย่างต่อเนื่อง (CME / วิจัย)',
+        'เส้นทางความก้าวหน้าทางวิชาการ (ตำแหน่ง / ผลงาน) มีความชัดเจน',
+        'บรรยากาศองค์กรเปิดรับความคิดเห็นและสนับสนุนนวัตกรรม',
+        'ระบบพี่เลี้ยง (Mentor) และ Backup System มีประสิทธิผล'
+      ]},
+      { id: '2.2', title: 'ด้านการศึกษาและการสอน (สำหรับอาจารย์แพทย์)', questions: [
+        'หลักสูตรและผลลัพธ์การเรียนรู้ (PLOs) สอดคล้องกับมาตรฐานสากล (WFME/OBE)',
+        'มีเครื่องมือและระบบสนับสนุนการสอนที่ทันสมัย (Simulation / Digital Platform)',
+        'มีเวลาเพียงพอสำหรับการเตรียมการสอนและพัฒนาหลักสูตร',
+        'กรอบมาตรฐานอาจารย์ (PSF) ชัดเจนและนำไปปฏิบัติได้'
+      ]}
+    ],
+    openEndedSections: [
+      { id: '2.3', title: 'ความต้องการและข้อเสนอแนะ', questions: [
+        'ความต้องการเร่งด่วนที่สุดในการปรับปรุงสภาพแวดล้อมการทำงาน',
+        'ทักษะหรือความรู้ที่ต้องการพัฒนาเพิ่มเติม (เช่น AI / Leadership / Research)',
+        'ปัจจัยที่ทำให้ท่านอยากคงอยู่ในองค์กรระยะยาว',
+        'ข้อเสนอแนะด้านนโยบายหรือการบริหารจัดการองค์กร'
+      ]}
+    ]
+  },
+  {
+    id: 3, icon: '💉', name: 'พยาบาล', nameEn: 'Nursing Staff', type: 'internal',
+    target: 'พยาบาลวิชาชีพ พยาบาลเทคนิค ผู้ช่วยพยาบาล ทุกหอผู้ป่วยและหน่วยงาน',
+    profileFields: [
+      { id: 'ward', label: 'หอผู้ป่วย/หน่วยงาน', type: 'text', placeholder: 'ระบุหอ/หน่วย' },
+      { id: 'level', label: 'ระดับ', type: 'radio', options: ['พยาบาลวิชาชีพ','พยาบาลเทคนิค','ผู้ช่วยพยาบาล'] },
+      { id: 'exp', label: 'ประสบการณ์', type: 'radio', options: ['<3ปี','3-10ปี','>10ปี'] }
+    ],
+    likertSections: [
+      { id: '3.1', title: 'สภาพแวดล้อมการทำงานและความปลอดภัย', questions: [
+        'อัตรากำลังพยาบาลต่อผู้ป่วยมีความเหมาะสม',
+        'ระบบการอยู่เวร 3 ผลัด มีความเป็นธรรมและไม่หนักเกินไป',
+        'อุปกรณ์และเวชภัณฑ์มีความพร้อมใช้งานและเพียงพอ',
+        'มีระบบรายงานอุบัติการณ์ (Incident Report) ที่ปลอดภัยและไม่ลงโทษ',
+        'ได้รับการอบรมพัฒนาทักษะอย่างต่อเนื่อง (In-service Training)',
+        'ระบบสารสนเทศ (HIS / EMR) สนับสนุนการดูแลผู้ป่วยได้จริง',
+        'ค่าตอบแทน ค่าเวร และสวัสดิการมีความเหมาะสม',
+        'หัวหน้าพยาบาลสนับสนุนและรับฟังปัญหาของพยาบาลในทีม',
+        'บรรยากาศการทำงานร่วมกับทีมแพทย์และสหวิชาชีพมีความเป็นทีมสูง'
+      ]}
+    ],
+    openEndedSections: [
+      { id: '3.2', title: 'ความต้องการและข้อเสนอแนะ', questions: [
+        'ปัญหาเร่งด่วนที่สุดในการปฏิบัติงานประจำวัน',
+        'ทักษะหรือการอบรมที่ต้องการเพิ่มเติม',
+        'ข้อเสนอแนะเพื่อเพิ่มความปลอดภัยของผู้ป่วยและบุคลากร'
+      ]}
+    ]
+  },
+  {
+    id: 4, icon: '🔬', name: 'บุคลากรวิชาชีพอื่น', nameEn: 'Allied Health Professionals', type: 'internal',
+    target: 'เภสัชกร นักกายภาพบำบัด นักรังสีการแพทย์ นักเทคนิคการแพทย์ นักโภชนาการ นักสังคมสงเคราะห์',
+    profileFields: [
+      { id: 'profession', label: 'วิชาชีพ', type: 'radio', options: ['เภสัชกร','นักกายภาพ','นักรังสี','นักเทคนิคการแพทย์','นักโภชนาการ','นักสังคมสงเคราะห์','อื่น ๆ'] }
+    ],
+    likertSections: [
+      { id: '4.1', title: 'สภาพแวดล้อมการทำงาน', questions: [
+        'บทบาทและขอบเขตหน้าที่ของวิชาชีพได้รับการยอมรับจากทีมสุขภาพ',
+        'มีส่วนร่วมในการวางแผนดูแลผู้ป่วยแบบสหวิชาชีพ (IPE/IPW) อย่างแท้จริง',
+        'อุปกรณ์ เครื่องมือ และสภาพแวดล้อมเหมาะสมต่อการปฏิบัติงาน',
+        'มีโอกาสพัฒนาวิชาชีพและเข้าร่วมการอบรม/ประชุมวิชาการ',
+        'ค่าตอบแทนและสวัสดิการสมเหตุสมผลเมื่อเทียบกับภาระงาน',
+        'ระบบสารสนเทศรองรับการทำงานของสายวิชาชีพได้อย่างมีประสิทธิภาพ',
+        'ผู้บังคับบัญชาสนับสนุนการพัฒนาสมรรถนะเฉพาะทาง'
+      ]}
+    ],
+    openEndedSections: [
+      { id: '4.2', title: 'ความต้องการและข้อเสนอแนะ', questions: [
+        'อุปสรรคสำคัญในการปฏิบัติงานวิชาชีพในโรงพยาบาลนี้',
+        'ความต้องการด้านการพัฒนาสมรรถนะเฉพาะทาง',
+        'ข้อเสนอแนะเพื่อส่งเสริมการทำงานเป็นทีมสหวิชาชีพให้ดียิ่งขึ้น'
+      ]}
+    ]
+  },
+  {
+    id: 5, icon: '🛠️', name: 'บุคลากรสายสนับสนุน', nameEn: 'Supporting Staff', type: 'internal',
+    target: 'เจ้าหน้าที่ธุรการ การเงิน พัสดุ IT งานอาคาร รักษาความปลอดภัย โภชนาการ ซักฟอก ขนส่ง',
+    profileFields: [
+      { id: 'dept', label: 'ฝ่าย/งาน', type: 'text', placeholder: 'ระบุฝ่าย/งาน' },
+      { id: 'level', label: 'ระดับตำแหน่ง', type: 'radio', options: ['ปฏิบัติการ','ชำนาญการ','ชำนาญการพิเศษ','บริหาร'] },
+      { id: 'exp', label: 'ประสบการณ์', type: 'radio', options: ['<3ปี','3-10ปี','>10ปี'] }
+    ],
+    likertSections: [
+      { id: '5.1', title: 'ความพึงพอใจและสภาพแวดล้อมการทำงาน', questions: [
+        'งานที่รับผิดชอบชัดเจน เหมาะสมกับสมรรถนะและปริมาณงานไม่หนักเกิน',
+        'เครื่องมือ อุปกรณ์ และระบบ IT สนับสนุนการทำงานอย่างมีประสิทธิภาพ',
+        'ได้รับการพัฒนาทักษะอย่างต่อเนื่อง (อบรม / OD Activity)',
+        'ผู้บังคับบัญชาให้ Feedback สม่ำเสมอและรับฟังความคิดเห็น',
+        'ระบบประเมินผลงาน (KPI) มีความเป็นธรรมและโปร่งใส',
+        'ระบบสวัสดิการและเส้นทางความก้าวหน้าในอาชีพชัดเจน',
+        'รู้สึกมีคุณค่า มีส่วนร่วม และเป็นส่วนหนึ่งขององค์กร',
+        'ค่าตอบแทนสมเหตุสมผลกับภาระงานที่รับผิดชอบ'
+      ]}
+    ],
+    openEndedSections: [
+      { id: '5.2', title: 'ความต้องการและข้อเสนอแนะ', questions: [
+        'ระบบหรือกระบวนการที่ต้องการให้ปรับปรุงเร่งด่วน',
+        'ความต้องการด้านการพัฒนาสมรรถนะส่วนบุคคล (Upskill / Reskill)',
+        'ข้อเสนอแนะเพื่อเพิ่มประสิทธิภาพและลดขั้นตอนการทำงาน'
+      ]}
+    ]
+  },
+  {
+    id: 6, icon: '🎓', name: 'นักศึกษา / ผู้เรียน', nameEn: 'Medical Students & Residents', type: 'internal',
+    target: 'นักศึกษาแพทย์ชั้นคลินิก (ปี 4-6) แพทย์เพิ่มพูนทักษะ แพทย์ใช้ทุน แพทย์ประจำบ้าน',
+    profileFields: [
+      { id: 'year', label: 'ชั้นปี/ระดับ', type: 'text', placeholder: 'เช่น ปี 5' },
+      { id: 'branch', label: 'สาขา', type: 'text', placeholder: 'ระบุสาขา' },
+      { id: 'role', label: 'รูปแบบ', type: 'radio', options: ['นศพ.ปี4','นศพ.ปี5','นศพ.ปี6','แพทย์เพิ่มพูนฯ','แพทย์ใช้ทุน','แพทย์ประจำบ้าน'] }
+    ],
+    likertSections: [
+      { id: '6.1', title: 'คุณภาพการเรียนรู้และสภาพแวดล้อม', questions: [
+        'หลักสูตรและการจัดการเรียนรู้ทันสมัย สอดคล้อง OBE / CBE',
+        'ได้รับประสบการณ์คลินิกจริง (Authentic Learning) เพียงพอและหลากหลาย',
+        'อาจารย์แพทย์ให้ Feedback ที่ทันท่วงที สร้างสรรค์ และเป็นรูปธรรม',
+        'ระบบอาจารย์ที่ปรึกษา (Mentoring / Coaching) ดูแลอย่างใกล้ชิด',
+        'สภาพแวดล้อมปลอดภัย ไม่มีการกลั่นแกล้งหรือล่วงละเมิด (SAFE Policy)',
+        'มีการบูรณาการทักษะดิจิทัล / AI ในการเรียนรู้อย่างเป็นรูปธรรม',
+        'มีวิชาเลือก (Elective/Selective) ที่ตอบโจทย์ความสนใจส่วนบุคคล',
+        'ภาระงานและชั่วโมงเวรมีความเหมาะสม ไม่หนักเกินจนกระทบสุขภาพ',
+        'รู้สึกปลอดภัยทางจิตใจในการแสดงความคิดเห็น (Psychological Safety)',
+        'ระบบประเมินผลมีความเป็นธรรม โปร่งใส และตอบสนองการพัฒนา'
+      ]}
+    ],
+    openEndedSections: [
+      { id: '6.2', title: 'ความต้องการและข้อเสนอแนะ', questions: [
+        'ทักษะหรือสมรรถนะที่ต้องการฝึกเพิ่มเติมมากที่สุด',
+        'สิ่งที่ต้องการให้ปรับปรุงในระบบการเรียนการสอนหรือการประเมินผล',
+        'ข้อเสนอแนะด้านสวัสดิการ สุขภาวะ และคุณภาพชีวิตผู้เรียน'
+      ]}
+    ]
+  },
+  {
+    id: 7, icon: '🏥', name: 'ผู้ป่วย / ผู้รับบริการ', nameEn: 'Patients & Caregivers', type: 'external',
+    target: 'ผู้ป่วยใน ผู้ป่วยนอก ญาติ ผู้ดูแล และตัวแทนกลุ่มผู้รับบริการ',
+    profileFields: [
+      { id: 'type', label: 'ประเภท', type: 'radio', options: ['ผู้ป่วยใน','ผู้ป่วยนอก','ญาติ/ผู้ดูแล'] },
+      { id: 'rights', label: 'สิทธิการรักษา', type: 'radio', options: ['บัตรทอง','ข้าราชการ','ประกันสังคม','เบิกจ่ายตรง','ชำระเอง'] }
+    ],
+    likertSections: [
+      { id: '7.1', title: 'ความพึงพอใจในการรับบริการ', questions: [
+        'ความสะอาด ความเป็นระเบียบ และสิ่งแวดล้อมโดยรวมของสถานที่',
+        'ความสุภาพ ยิ้มแย้มแจ่มใส และความใส่ใจของเจ้าหน้าที่ทุกระดับ',
+        'ระยะเวลารอรับบริการอยู่ในระดับที่ยอมรับได้',
+        'ได้รับข้อมูลเกี่ยวกับโรค การรักษา และสิทธิการรักษาอย่างเพียงพอ',
+        'ระบบนัดหมายและการประสานงานสะดวก รวดเร็ว และลดขั้นตอน',
+        'รู้สึกปลอดภัย เชื่อมั่นในคุณภาพการรักษา (Patient Safety)',
+        'ช่องทางดิจิทัล (App / Line OA / Telemedicine) ใช้งานง่าย สะดวก',
+        'การดูแลคำนึงถึงความเป็นมนุษย์ ความเป็นส่วนตัว และวัฒนธรรม',
+        'คุณภาพการรักษาและผลลัพธ์ตรงหรือเกินความคาดหวัง'
+      ]}
+    ],
+    openEndedSections: [
+      { id: '7.2', title: 'ความต้องการและข้อเสนอแนะ', questions: [
+        'ความต้องการที่ยังไม่ได้รับการตอบสนอง (Unmet Needs)',
+        'บริการหรือช่องทางที่ต้องการให้พัฒนาเพิ่มเติม',
+        'ข้อเสนอแนะเพื่อปรับปรุงคุณภาพบริการ'
+      ]}
+    ]
+  },
+  {
+    id: 8, icon: '🌳', name: 'ชุมชน / ประชาชน', nameEn: 'Community & General Public', type: 'external',
+    target: 'ผู้นำชุมชน อสม. ตัวแทนชุมชนในพื้นที่รับผิดชอบ และประชาชนทั่วไป',
+    profileFields: [
+      { id: 'community', label: 'ที่อยู่ / ชุมชน', type: 'text', placeholder: 'ระบุชุมชน' },
+      { id: 'role', label: 'บทบาท', type: 'radio', options: ['ผู้นำชุมชน','อสม.','ประชาชนทั่วไป','อื่น ๆ'] }
+    ],
+    likertSections: [
+      { id: '8.1', title: 'การมีส่วนร่วมและการส่งเสริมสุขภาพชุมชน', questions: [
+        'โรงพยาบาลมีบทบาทเชิงรุกในการส่งเสริมสุขภาพในชุมชน',
+        'กิจกรรมรณรงค์สุขภาพและโครงการบริการวิชาการเข้าถึงชุมชนได้จริง',
+        'มีระบบสื่อสารสุขภาพที่ชุมชนเข้าใจง่าย เหมาะกับบริบทท้องถิ่น',
+        'โรงพยาบาลตอบสนองต่อปัญหาสุขภาพเฉพาะพื้นที่ได้อย่างทันท่วงที',
+        'ชุมชนได้รับโอกาสมีส่วนร่วมในการวางแผนและพัฒนาบริการสุขภาพ',
+        'โรงพยาบาลมีความโปร่งใสและน่าเชื่อถือในสายตาชุมชน'
+      ]}
+    ],
+    openEndedSections: [
+      { id: '8.2', title: 'ความต้องการและข้อเสนอแนะ', questions: [
+        'ปัญหาสุขภาพในพื้นที่ที่โรงพยาบาลควรให้ความสำคัญเพิ่มเติม',
+        'รูปแบบการส่งเสริมสุขภาพที่ต้องการจากโรงพยาบาล',
+        'ข้อเสนอแนะเพื่อให้โรงพยาบาลรับใช้ชุมชนได้ดียิ่งขึ้น'
+      ]}
+    ]
+  },
+  {
+    id: 9, icon: '🏛️', name: 'หน่วยงานภาครัฐ', nameEn: 'Government & Regulatory Bodies', type: 'external',
+    target: 'กระทรวงสาธารณสุข, อว., สปสช., สธจ., กรมต่าง ๆ, สำนักงานสาธารณสุขจังหวัด',
+    profileFields: [
+      { id: 'agency', label: 'หน่วยงาน', type: 'text', placeholder: 'ระบุชื่อหน่วยงาน' },
+      { id: 'role', label: 'บทบาทต่อโรงพยาบาล', type: 'radio', options: ['กำกับนโยบาย','จัดสรรงบประมาณ','รับรองมาตรฐาน','ส่งต่อผู้ป่วย'] }
+    ],
+    likertSections: [
+      { id: '9.1', title: 'การดำเนินงานตามนโยบายและมาตรฐาน', questions: [
+        'โรงพยาบาลดำเนินงานสอดคล้องกับนโยบายและยุทธศาสตร์ระดับชาติ',
+        'ระบบรายงานและส่งข้อมูลสู่หน่วยงานกำกับดูแลมีความถูกต้องและทันเวลา',
+        'โรงพยาบาลตอบสนองต่อนโยบายใหม่ได้อย่างรวดเร็วและมีประสิทธิผล',
+        'การประสานงานระหว่างโรงพยาบาลกับหน่วยงานของท่านเป็นไปด้วยดี',
+        'โรงพยาบาลมีความโปร่งใสในการเบิกจ่ายงบประมาณและตรวจสอบได้'
+      ]}
+    ],
+    openEndedSections: [
+      { id: '9.2', title: 'ความต้องการและข้อเสนอแนะ', questions: [
+        'ข้อกังวลหรือประเด็นที่ต้องการให้โรงพยาบาลปรับปรุงตามกรอบนโยบาย',
+        'การสนับสนุนหรือความร่วมมือที่คาดหวังจากโรงพยาบาล',
+        'ข้อเสนอแนะเชิงนโยบายเพื่อยกระดับโรงพยาบาลในระดับระบบ'
+      ]}
+    ]
+  },
+  {
+    id: 10, icon: '🔗', name: 'โรงพยาบาลเครือข่าย', nameEn: 'Network Hospitals', type: 'external',
+    target: 'โรงพยาบาลชุมชน โรงพยาบาลประจำจังหวัด รพ.สต. ที่เป็นแหล่งฝึก / รับส่งต่อผู้ป่วย',
+    profileFields: [
+      { id: 'hospital', label: 'โรงพยาบาล/หน่วยงาน', type: 'text', placeholder: 'ชื่อโรงพยาบาล' },
+      { id: 'type', label: 'ประเภท', type: 'radio', options: ['รพช.','รพท.','รพศ.','รพ.สต.','อื่น ๆ'] },
+      { id: 'role', label: 'บทบาท', type: 'radio', options: ['แหล่งฝึก','ส่งต่อผู้ป่วย','ทั้งสองบทบาท'] }
+    ],
+    likertSections: [
+      { id: '10.1', title: 'ความร่วมมือและการประสานงาน', questions: [
+        'ระบบส่งต่อผู้ป่วย (Referral) มีความชัดเจนและมีประสิทธิภาพ',
+        'การสื่อสารและประสานงานในการส่งต่อผู้ป่วยรวดเร็วและครบถ้วน',
+        'นักศึกษาแพทย์ที่ฝึกงานมีความรู้และทักษะเหมาะสม',
+        'โรงพยาบาลสนับสนุนการพัฒนาศักยภาพบุคลากรในเครือข่าย',
+        'การแลกเปลี่ยนองค์ความรู้และวิชาการระหว่างสถาบันมีความสม่ำเสมอ',
+        'ข้อตกลงความร่วมมือ (MOU) มีความชัดเจนและนำไปปฏิบัติได้จริง'
+      ]}
+    ],
+    openEndedSections: [
+      { id: '10.2', title: 'ความต้องการและข้อเสนอแนะ', questions: [
+        'ปัญหาสำคัญในระบบส่งต่อหรือการประสานงานที่ต้องแก้ไข',
+        'การสนับสนุนหรือความช่วยเหลือที่ต้องการจากโรงพยาบาลหลัก',
+        'ข้อเสนอแนะเพื่อพัฒนาความร่วมมือในเครือข่ายให้มีประสิทธิภาพมากขึ้น'
+      ]}
+    ]
+  },
+  {
+    id: 11, icon: '🏫', name: 'มหาวิทยาลัย / คณะแพทย์', nameEn: 'University & Medical Faculty', type: 'external',
+    target: 'ผู้บริหารมหาวิทยาลัย ผู้บริหารคณะแพทยศาสตร์ กรรมการหลักสูตร หัวหน้าภาควิชา',
+    profileFields: [
+      { id: 'role', label: 'บทบาท', type: 'radio', options: ['ผู้บริหารมหาวิทยาลัย','ผู้บริหารคณะแพทย์','หัวหน้าภาควิชา','กรรมการหลักสูตร','อื่น ๆ'] }
+    ],
+    likertSections: [
+      { id: '11.1', title: 'ความสอดคล้องระหว่างโรงพยาบาลและพันธกิจวิชาการ', questions: [
+        'โรงพยาบาลสนับสนุนพันธกิจการผลิตบัณฑิตแพทย์คุณภาพได้อย่างเต็มศักยภาพ',
+        'หลักสูตรแพทยศาสตรบัณฑิตสอดคล้องกับมาตรฐาน WFME / EdPEx / AUN-QA',
+        'ระบบการประเมินผลผู้เรียน (OBE / EPAs) มีความเที่ยงตรงและโปร่งใส',
+        'โรงพยาบาลเป็นแหล่งวิจัยที่เหมาะสมและสนับสนุนการตีพิมพ์ผลงาน',
+        'การจัดสรรทรัพยากรและงบประมาณร่วมกันระหว่างคณะและโรงพยาบาลมีความชัดเจน',
+        'ระบบ IT และ Digital Platform รองรับการเรียนการสอนและวิจัยได้จริง'
+      ]}
+    ],
+    openEndedSections: [
+      { id: '11.2', title: 'ความต้องการและข้อเสนอแนะ', questions: [
+        'ความท้าทายสำคัญในการบูรณาการพันธกิจโรงพยาบาลและมหาวิทยาลัย',
+        'ข้อเสนอแนะเพื่อยกระดับคุณภาพการศึกษาแพทย์ในสถาบัน',
+        'การสนับสนุนจากมหาวิทยาลัยที่ต้องการเพิ่มเติมสำหรับโรงพยาบาล'
+      ]}
+    ]
+  },
+  {
+    id: 12, icon: '🗺️', name: 'อปท. / ท้องถิ่น', nameEn: 'Local Government Organizations', type: 'external',
+    target: 'อบต. อบจ. เทศบาล ผู้นำท้องถิ่น และหน่วยงานที่ร่วมมือในการส่งเสริมสุขภาพพื้นที่',
+    profileFields: [
+      { id: 'orgType', label: 'ประเภทองค์กร', type: 'radio', options: ['อบต.','เทศบาล','อบจ.','อื่น ๆ'] },
+      { id: 'area', label: 'จังหวัด/พื้นที่รับผิดชอบ', type: 'text', placeholder: 'ระบุจังหวัด/พื้นที่' }
+    ],
+    likertSections: [
+      { id: '12.1', title: 'ความร่วมมือระหว่างโรงพยาบาลและท้องถิ่น', questions: [
+        'โรงพยาบาลและ อปท. มีกลไกความร่วมมือที่ชัดเจนและต่อเนื่อง',
+        'โครงการส่งเสริมสุขภาพร่วมกันบรรลุเป้าหมายและมีผลลัพธ์จริง',
+        'โรงพยาบาลรับฟังและตอบสนองต่อปัญหาสุขภาพที่ อปท. นำเสนอ',
+        'การใช้งบประมาณร่วมมีความโปร่งใสและตรวจสอบได้',
+        'ชุมชนในพื้นที่มีความพึงพอใจต่อบริการสุขภาพที่โรงพยาบาลให้'
+      ]}
+    ],
+    openEndedSections: [
+      { id: '12.2', title: 'ความต้องการและข้อเสนอแนะ', questions: [
+        'ปัญหาสุขภาพในพื้นที่ที่ต้องการให้โรงพยาบาลสนับสนุนเพิ่มเติม',
+        'รูปแบบความร่วมมือใหม่ที่ต้องการพัฒนาร่วมกัน',
+        'ข้อเสนอแนะเพื่อพัฒนาระบบสุขภาพในพื้นที่ร่วมกัน'
+      ]}
+    ]
+  },
+  {
+    id: 13, icon: '📦', name: 'ผู้จัดจำหน่าย / Suppliers', nameEn: 'Suppliers & Vendors', type: 'external',
+    target: 'บริษัทยา บริษัทเวชภัณฑ์และครุภัณฑ์ทางการแพทย์ บริษัท IT / Software และผู้รับจ้างบริการ',
+    profileFields: [
+      { id: 'productType', label: 'ประเภทสินค้า/บริการ', type: 'radio', options: ['ยาและเวชภัณฑ์','เครื่องมือแพทย์','IT/Software','อาหาร/โภชนาการ','บริการ','อื่น ๆ'] }
+    ],
+    likertSections: [
+      { id: '13.1', title: 'ความสัมพันธ์และกระบวนการจัดซื้อจัดจ้าง', questions: [
+        'กระบวนการจัดซื้อจัดจ้างของโรงพยาบาลมีความโปร่งใสและตรงตามกฎระเบียบ',
+        'การสื่อสารและประสานงานในกระบวนการจัดหาสินค้า/บริการเป็นไปอย่างราบรื่น',
+        'เงื่อนไขสัญญาและระยะเวลาการชำระเงินมีความเหมาะสมและปฏิบัติได้',
+        'โรงพยาบาลแสดงออกถึงความต้องการสินค้า/บริการอย่างชัดเจนล่วงหน้า',
+        'มีกลไกรับเรื่องร้องเรียนหรือข้อเสนอแนะที่ Supplier เข้าถึงได้'
+      ]}
+    ],
+    openEndedSections: [
+      { id: '13.2', title: 'ความต้องการและข้อเสนอแนะ', questions: [
+        'อุปสรรคสำคัญในการดำเนินธุรกิจกับโรงพยาบาล',
+        'ข้อเสนอเพื่อปรับปรุงกระบวนการจัดซื้อจัดจ้างให้มีประสิทธิภาพ',
+        'ข้อเสนอแนะอื่น ๆ เพื่อพัฒนาความร่วมมือระยะยาว'
+      ]}
+    ]
+  },
+  {
+    id: 14, icon: '✅', name: 'องค์กรรับรองคุณภาพ', nameEn: 'Accreditation & Quality Bodies', type: 'external',
+    target: 'สรพ. (HA/JCI), แพทยสภา, ราชวิทยาลัย, กรมสนับสนุนบริการสุขภาพ, กพร.',
+    profileFields: [
+      { id: 'org', label: 'องค์กร', type: 'radio', options: ['สรพ. (HA)','แพทยสภา','ราชวิทยาลัย','กพร.','สถาบันรับรองคุณภาพสถานพยาบาล','อื่น ๆ'] }
+    ],
+    likertSections: [
+      { id: '14.1', title: 'การดำเนินงานตามมาตรฐานและเกณฑ์การรับรอง', questions: [
+        'โรงพยาบาลมีระบบเตรียมความพร้อมสำหรับการรับรองคุณภาพอย่างต่อเนื่อง',
+        'เอกสารและหลักฐานการดำเนินงานครบถ้วน ถูกต้อง และตรวจสอบได้',
+        'บุคลากรทุกระดับมีความเข้าใจในเกณฑ์มาตรฐานที่เกี่ยวข้อง',
+        'การปรับปรุงตามข้อค้นพบจากการประเมินครั้งก่อนมีความก้าวหน้าชัดเจน',
+        'วัฒนธรรมองค์กรมุ่งเน้นคุณภาพอย่างยั่งยืน ไม่ใช่เพียงเพื่อการตรวจสอบ'
+      ]}
+    ],
+    openEndedSections: [
+      { id: '14.2', title: 'ความต้องการและข้อเสนอแนะ', questions: [
+        'จุดแข็งที่โรงพยาบาลนี้โดดเด่นเมื่อเทียบกับมาตรฐาน',
+        'จุดที่ยังต้องพัฒนาเพื่อบรรลุมาตรฐานระดับสูงขึ้น',
+        'ข้อเสนอแนะเพื่อสร้างวัฒนธรรมคุณภาพที่ยั่งยืนในองค์กร'
+      ]}
+    ]
+  }
+];
+
+function init() {
+  const g = GROUPS.find(x => x.id === GROUP_ID);
+  if (!g) { document.getElementById('form-container').innerHTML = '<p>ไม่พบกลุ่มนี้</p>'; return; }
+  document.getElementById('form-container').innerHTML = buildFormHTML(g);
+}
+
+function buildFormHTML(g) {
+  let html = `
+    <div class="section-header">
+      <div class="s-icon">${g.icon}</div>
+      <div>
+        <h2>ส่วนที่ ${g.id} : ${g.name}</h2>
+        <p>${g.nameEn} | กลุ่มเป้าหมาย: ${g.target}</p>
+      </div>
+      <div class="s-badge">${g.type==='internal'?'🏥 กลุ่มภายใน':'🌐 กลุ่มภายนอก'}</div>
+    </div>
+    <div class="profile-fields">
+      <h4>👤 ข้อมูลผู้ตอบแบบสอบถาม</h4>
+      <div class="profile-fields-grid">`;
+  g.profileFields.forEach(pf => {
+    if (pf.type==='text') {
+      html += `<div class="form-group"><label>${pf.label}</label>
+        <input type="text" id="pf_${pf.id}" placeholder="${pf.placeholder||''}"
+          oninput="formData.profile['${pf.id}']=this.value"></div>`;
+    } else if (pf.type==='radio') {
+      html += `<div class="form-group"><label>${pf.label}</label><div class="radio-group">
+        ${pf.options.map(o=>`<label class="radio-item"><input type="radio" name="pf_${pf.id}" value="${o}" onchange="formData.profile['${pf.id}']='${o}'"> ${o}</label>`).join('')}
+      </div></div>`;
+    }
+  });
+  html += `</div></div>`;
+  g.likertSections.forEach(sec => {
+    html += `<div class="section-block"><h3>📋 ${sec.id} ${sec.title}
+      <span style="font-size:12px;font-weight:400;color:var(--text-muted);">(1=น้อยที่สุด — 5=มากที่สุด)</span></h3>
+      <table class="likert-table"><thead><tr>
+        <th>ประเด็นการประเมิน</th>
+        <th>1<br><small>น้อยที่สุด</small></th><th>2<br><small>น้อย</small></th>
+        <th>3<br><small>ปานกลาง</small></th><th>4<br><small>มาก</small></th>
+        <th>5<br><small>มากที่สุด</small></th>
+      </tr></thead><tbody>`;
+    sec.questions.forEach((q,qi) => {
+      const key = `${sec.id}_q${qi}`;
+      html += `<tr><td><span class="q-num">${qi+1}.</span> ${q}</td>`;
+      [1,2,3,4,5].forEach(v => {
+        html += `<td><input type="radio" class="likert-radio" name="${key}" value="${v}"
+          onchange="formData.likert['${key}']=${v}"></td>`;
+      });
+      html += `</tr>`;
+    });
+    html += `</tbody></table></div>`;
+  });
+  g.openEndedSections.forEach(sec => {
+    html += `<div class="section-block"><h3>✍️ ${sec.id} ${sec.title}</h3><div class="openended-section">`;
+    sec.questions.forEach((q,qi) => {
+      const key = `oe_${sec.id}_q${qi}`;
+      html += `<div class="oe-item"><div class="oe-label">${qi+1}. ${q}</div>
+        <textarea class="oe-textarea" placeholder="กรอกคำตอบที่นี่..." rows="3"
+          oninput="formData.openEnded['${key}']=this.value"></textarea></div>`;
+    });
+    html += `</div></div>`;
+  });
+  html += `<div class="form-actions">
+    <button class="btn btn-primary" onclick="submitForm()">✅ ส่งแบบประเมิน</button>
+  </div>`;
+  return html;
+}
+
+async function submitForm() {
+  const g = GROUPS.find(x => x.id === GROUP_ID);
+  const vals = Object.values(formData.likert).filter(v => v > 0);
+  const avg  = vals.length > 0 ? vals.reduce((a,b) => a+b,0)/vals.length : 0;
+  const name = document.getElementById('respondent-name').value.trim() || 'ไม่ระบุชื่อ';
+  const payload = {
+    action: 'submitForm', timestamp: new Date().toISOString(),
+    hospital: HOSPITAL, period: PERIOD, collector: name,
+    groupId: g.id, groupName: g.name, groupType: g.type,
+    profile: formData.profile, likert: formData.likert,
+    openEnded: formData.openEnded, avgScore: parseFloat(avg.toFixed(2))
+  };
+  try {
+    await fetch(SCRIPT_URL, {
+      method: 'POST', headers: { 'Content-Type': 'text/plain' },
+      body: JSON.stringify(payload), mode: 'no-cors'
+    });
+  } catch(e) { console.error(e); }
+  document.getElementById('form-area').style.display = 'none';
+  document.getElementById('success-screen').style.display = 'block';
+  document.getElementById('score-display').textContent = 'คะแนนเฉลี่ย: '+(avg>0?avg.toFixed(2):'—')+' / 5';
+  window.scrollTo(0,0);
+  showToast('✅ ส่งแบบประเมินสำเร็จ!', 'success');
+}
+
+function resetForm() {
+  formData = { profile: {}, likert: {}, openEnded: {} };
+  document.getElementById('respondent-name').value = '';
+  document.getElementById('success-screen').style.display = 'none';
+  document.getElementById('form-area').style.display = 'block';
+  init(); window.scrollTo(0,0);
+}
+
+function showToast(msg, type='success') {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.className = 'toast '+type;
+  setTimeout(() => t.classList.add('show'), 10);
+  setTimeout(() => t.classList.remove('show'), 3500);
+}
+
+init();
+</script>
+</body>
+</html>
